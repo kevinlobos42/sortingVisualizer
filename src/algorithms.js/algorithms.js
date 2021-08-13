@@ -3,7 +3,6 @@ export const mergeSortAnimations = (array)=>{
     if(array.length <= 1) return array;
     const helperArray = array.slice();
     mergeSort(array, 0, array.length-1, helperArray, animations);
-    console.log(animations);
     return animations;
 }
 
@@ -45,7 +44,6 @@ const merge = (array, left, m, right, animations)=>{
         k+=1
     }
     while(i<n1){
-
         animations.push([k,L[i]])
         array[k].height = L[i]
         i+=1
@@ -57,34 +55,56 @@ const merge = (array, left, m, right, animations)=>{
         array[k].height = R[j]
         j+=1;
         k+=1;
-    }
-        
+    }    
 }
-// const merge = (array, start, mid, end, helperArray, animations)=>{
-//     let k = start;
-//     let i = start;
-//     let j = mid+1;
-//     while(i<=mid && j<= end){
-//         animations.push([i,j]);
-//         animations.push([i,j]);
-//         if(helperArray[i].height <= helperArray[j].height){
-//             animations.push([k, helperArray[i].height]);
-//             array[k++].height = helperArray[i++].height;
-//         } else {
-//             animations.push([k, helperArray[j].height]);
-//             array[k++].height = helperArray[j++].height;
-//         }
-//     }
-//     while (i <= mid) {
-//         animations.push([i, i]);
-//         animations.push([i, i]);
-//         animations.push([k, helperArray[i].height]);
-//         array[k++].height = helperArray[i++].height;
-//       }
-//       while (j <= end) {
-//         animations.push([j, j]);
-//         animations.push([j, j]);
-//         animations.push([k, helperArray[j].height]);
-//         array[k++].height = helperArray[j++].height;
-//       }
-// }
+
+export const quickSortAnimations = (array)=>{
+    const animations = [];
+    if(array.length<=1)return array;
+    const helperArray = array.slice();
+    quickSort(array, 0, array.length-1, helperArray, animations);
+    return animations;
+}
+const quickSort = (array,start,end,helperArray, animations)=>{
+    if( start < end ){
+        let piv = quickSortPartition (array, start, end, animations ) ;
+        quickSort (helperArray,start, piv -1, array, animations);
+        quickSort (helperArray,piv +1, end, array, animations) ;
+    }
+}
+const quickSortPartition = (arr, start, end, animations)=>{
+    let i = start + 1 ;
+    let piv = arr[start].height;
+    for(let j=start+1; j<=end; j++){
+        if(arr[j].height < piv){
+            animations.push([i,arr[j].height])
+            animations.push([j,arr[i].height])
+            swap(arr,i,j)
+            i+=1
+        }
+    }
+    animations.push([start, arr[i-1].height])
+    animations.push([i-1, arr[start].height])
+    swap(arr,start,i-1)
+
+    return i-1;
+}
+const swap = (arr, i, j) => {
+    let temp = arr[i].height;
+    arr[i].height = arr[j].height;
+    arr[j].height = temp;
+}
+
+export const bubbleSortAnimations = (array) =>{
+    const animations=[];
+    for (let i=0; i< array.length; i++){
+        for(let j=0; j< array.length-i-1; j++){
+            if(array[j].height> array[j+1].height){
+                animations.push([j+1,array[j].height])
+                animations.push([j,array[j+1].height])
+                swap(array,j+1,j)
+            }
+        }
+    }
+    return animations;
+}
