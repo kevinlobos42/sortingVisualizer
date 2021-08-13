@@ -33,6 +33,7 @@
   display: inline-block;
   width: 3px;
   background: #000;
+  transition: 0.5s all;
 }
 .node.moving {
   background: greenyellow;
@@ -42,7 +43,6 @@
     width: 1px;
     background: white;
     outline: 0.25px solid #000;
-    transition: 0.1s all;
   }
 }
 /*

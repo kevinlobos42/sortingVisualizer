@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import {Select, FormControl, MenuItem, InputLabel, Button, Slider, Tooltip, Typography, withStyles} from '@material-ui/core'
+import { mergeSortAnimations } from '../algorithms.js/algorithms'
 import '../css/Sorter.css'
 
 const CustomSlider = withStyles({
@@ -90,12 +91,12 @@ function Sorter() {
 
     const quickSort = async (arr, start, end) =>{
         if( start < end ){
-            let piv = quickSortPartition (arr, start, end ) ;
-            await animate();     
+            let piv = await quickSortPartition (arr, start, end ) ;
+            // await animate();     
             quickSort (arr,start, piv -1);
-            await animate();                 
+            // await animate();                 
             quickSort (arr,piv +1, end) ;
-            await animate();     
+            // await animate();     
 
         }
     }
@@ -109,56 +110,76 @@ function Sorter() {
             }
         }
         swap(arr,start,i-1)
+        let pause=true
+        let times =0
+        while(pause){
+            animate();
+            pause = times > 1? true:false
+            times++;
+        }
 
         return i-1;
     }
-    const mergeSort = async (array, left, right)=>{
-        if(left < right){
-            let m = Math.floor((left+(right-1))/2)
-            mergeSort(array,left,m)
-            mergeSort(array,m+1,right)
-            merge(array, left, m, right)
+    // const mergeSort = async (array, left, right)=>{
+    //     if(left < right){
+    //         let m = Math.floor((left+(right-1))/2)
+    //         mergeSort(array,left,m)
+    //         mergeSort(array,m+1,right)
+    //         merge(array, left, m, right)
             
-        }
-    }
-    const merge = (array, left, m, right)=>{
-        let n1 = m-left + 1
-        let n2 = right - m
+    //     }
+    // }
+    // const merge = (array, left, m, right)=>{
+    //     let n1 = m-left + 1
+    //     let n2 = right - m
 
-        let L = []
-        let R = []
-        for(let i=0; i < n1; i++){
-            L[i] = array[left + i].height
-        }
-        for(let j=0; j < n2; j++){
-            R[j] = array[m + 1 + j].height
-        }
+    //     let L = []
+    //     let R = []
+    //     for(let i=0; i < n1; i++){
+    //         L[i] = array[left + i].height
+    //     }
+    //     for(let j=0; j < n2; j++){
+    //         R[j] = array[m + 1 + j].height
+    //     }
 
-        let i = 0
-        let j = 0
-        let k = left
+    //     let i = 0
+    //     let j = 0
+    //     let k = left
 
-        while(i < n1 && j < n2){
-            if(L[i] <= R[j]){
-                array[k].height = L[i]  
-                i+=1
-            }else{
-                array[k].height = R[j]
-                j+=1
-            }
-            k+=1
-        }
-        while(i<n1){
-            array[k].height = L[i]
-            i+=1
-            k+=1
-        }
-        while(j < n2){
-            array[k].height = R[j]
-            j+=1;
-            k+=1;
-        }
+    //     while(i < n1 && j < n2){
+    //         if(L[i] <= R[j]){
+    //             array[k].height = L[i]  
+    //             i+=1
+    //         }else{
+    //             array[k].height = R[j]
+    //             j+=1
+    //         }
+    //         k+=1
+    //     }
+    //     while(i<n1){
+    //         array[k].height = L[i]
+    //         i+=1
+    //         k+=1
+    //     }
+    //     while(j < n2){
+    //         array[k].height = R[j]
+    //         j+=1;
+    //         k+=1;
+    //     }
         
+    // }
+    
+    const mergeSort = ()=>{
+        const temp = arr.slice();
+        const animations = mergeSortAnimations(temp);
+        for(let i=0; i<animations.length; i++){
+            const nodes = document.getElementsByClassName('node');
+            setTimeout(()=>{
+                const [node1Idx, newHeight] = animations[i];
+                const node1Style = nodes[node1Idx].style;
+                node1Style.height = `${newHeight*3}px`
+            }, i*10)
+        }
     }
     
     const sleep = ()=>{
@@ -182,7 +203,7 @@ function Sorter() {
         <>
             <div className="sorting-section">
                 {arr.map((node,nodeIdx) => (
-                    <div key={nodeIdx} className={"node "+node.classes} id={'node'+arr.indexOf(node)} style={{height:`${node.height*3}px`, width: `${node.width}px`}}>
+                    <div key={nodeIdx} className={"node"} style={{height:`${node.height*3}px`, width: `${node.width}px`}}>
 
                     </div>
                 ))}
