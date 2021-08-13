@@ -62,8 +62,11 @@ function Sorter() {
     useEffect(()=>{
         let numArr = []
         for(let i=0; i<size; i++){
-            const num = Math.floor(Math.random()*300+1)
-            numArr.push(num)
+            const num = Math.floor(Math.random()*300+8)
+            numArr.push({height:num,
+                         classes:'',
+                         width: size > 100 ? 8 : size > 50? 15 : size > 25 ? 25 : 50
+                        })
         }
         setArr(numArr)
     },[size])
@@ -72,14 +75,17 @@ function Sorter() {
         let tempArr = arr
         for (let i=0; i< arr.length; i++){
             for(let j=0; j< arr.length-i-1; j++){
-                if(tempArr[j]> tempArr[j+1]){
+                if(tempArr[j].height> tempArr[j+1].height){
                     swap(tempArr,j+1,j)
                     setArr([])
                     setTimeout(setArr(tempArr),1)
                     await sleep()
                 }
             }
+            // tempArr[i].classes += "moving "
         }
+        tempArr[0].classes += "moving "
+
     }
 
     const quickSort = async (arr, start, end) =>{
@@ -95,9 +101,9 @@ function Sorter() {
     }
     const quickSortPartition = (arr, start, end)=>{
         let i = start + 1 ;
-        let piv = arr[start];
+        let piv = arr[start].height;
         for(let j=start+1; j<=end; j++){
-            if(arr[j] < piv){
+            if(arr[j].height < piv){
                 swap(arr,i,j)
                 i+=1
             }
@@ -109,27 +115,23 @@ function Sorter() {
     const mergeSort = async (array, left, right)=>{
         if(left < right){
             let m = Math.floor((left+(right-1))/2)
-
             mergeSort(array,left,m)
             mergeSort(array,m+1,right)
             merge(array, left, m, right)
-            let tempArr = array
-            setArr([])
-            await setTimeout(setArr(tempArr),1)
-            await sleep()
+            
         }
     }
-    const merge = async (array, left, m, right)=>{
+    const merge = (array, left, m, right)=>{
         let n1 = m-left + 1
         let n2 = right - m
 
         let L = []
         let R = []
         for(let i=0; i < n1; i++){
-            L[i] = array[left + i]
+            L[i] = array[left + i].height
         }
         for(let j=0; j < n2; j++){
-            R[j] = array[m + 1 + j]
+            R[j] = array[m + 1 + j].height
         }
 
         let i = 0
@@ -138,21 +140,21 @@ function Sorter() {
 
         while(i < n1 && j < n2){
             if(L[i] <= R[j]){
-                array[k] = L[i]  
+                array[k].height = L[i]  
                 i+=1
             }else{
-                array[k] = R[j]
+                array[k].height = R[j]
                 j+=1
             }
             k+=1
         }
         while(i<n1){
-            array[k] = L[i]
+            array[k].height = L[i]
             i+=1
             k+=1
         }
         while(j < n2){
-            array[k] = R[j]
+            array[k].height = R[j]
             j+=1;
             k+=1;
         }
@@ -163,9 +165,9 @@ function Sorter() {
         return new Promise(resolve => setTimeout(resolve, 1))
     }
     const swap = (arr, i, j) => {
-        let temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
+        let temp = arr[i].height;
+        arr[i].height = arr[j].height;
+        arr[j].height = temp;
     }
     const animate = async()=>{
         const temp = arr
@@ -180,7 +182,7 @@ function Sorter() {
         <>
             <div className="sorting-section">
                 {arr.map((node,nodeIdx) => (
-                    <div key={nodeIdx} className="node" id={'node'+arr.indexOf(node)} style={{height:`${node*2.8}px`}}>
+                    <div key={nodeIdx} className={"node "+node.classes} id={'node'+arr.indexOf(node)} style={{height:`${node.height*3}px`, width: `${node.width}px`}}>
 
                     </div>
                 ))}
