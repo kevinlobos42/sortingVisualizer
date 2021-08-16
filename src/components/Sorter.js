@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import {Select, FormControl, MenuItem, InputLabel, Button, Slider, Tooltip, Typography, withStyles} from '@material-ui/core'
+import {Select, FormControl, MenuItem, InputLabel, Button, Slider, Typography, withStyles} from '@material-ui/core'
 import { mergeSortAnimations, quickSortAnimations, bubbleSortAnimations } from '../algorithms.js/algorithms'
 import '../css/Sorter.css'
 
@@ -45,13 +45,14 @@ function Sorter() {
         switch(alg){
             case 'Bubble-sort':
                 bubbleSort()
-                console.log(arr);
                 break
             case 'Merge-sort':
                 mergeSort(arr, 0, arr.length-1)
                 break;
             case 'Quick-sort':
                 quickSort(arr, 0, arr.length-1)
+                break;
+            default:
                 break;
         }
     }
@@ -65,7 +66,7 @@ function Sorter() {
             const num = Math.floor(Math.random()*300+8)
             numArr.push({height:num,
                          classes:'',
-                         width: size > 100 ? 8 : size > 50? 15 : size > 25 ? 25 : 50
+                         width: size > 120 ? 10:size >100 ? 12 :size > 75 ? 18: size > 50? 25 : size > 25 ? 40 : size > 15 ?75 : size > 8 ? 100 :size > 6? 200 : 300
                         })
         }
         setArr(numArr)
@@ -73,7 +74,6 @@ function Sorter() {
     // Bubble sort
     const bubbleSort = async () =>{
         const animations = bubbleSortAnimations(arr);
-
         for(let i=0; i<animations.length; i++){
             const nodes = document.getElementsByClassName('node');
             setTimeout(()=>{
