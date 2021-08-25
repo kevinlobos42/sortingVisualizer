@@ -35,11 +35,19 @@ const CustomSlider = withStyles({
 })(Slider) 
 
 function Sorter() {
+    const [click,setClick] = useState(false)
     const [size, setSize]=useState(150)
     const [arr, setArr] = useState([])
     const [alg, setAlg] = useState('Bubble-sort')
     const changeAlg = (e)=>{
         setAlg(e.target.value)
+    }
+    const handleClick = (node)=>{
+        for(let n of arr){
+            n.showSize = false
+        }
+        node.showSize = !node.showSize
+        setClick(!click)
     }
     const sort = async ()=>{
         switch(alg){
@@ -66,7 +74,8 @@ function Sorter() {
             const num = Math.floor(Math.random()*300+8)
             numArr.push({height:num,
                          classes:'',
-                         width: size > 120 ? 10:size >100 ? 12 :size > 75 ? 18: size > 50? 25 : size > 25 ? 40 : size > 15 ?75 : size > 8 ? 100 :size > 6? 200 : 300
+                         width: size > 120 ? 10:size >100 ? 12 :size > 75 ? 18: size > 50? 25 : size > 25 ? 40 : size > 15 ?75 : size > 8 ? 100 :size > 6? 200 : 300,
+                         showSize: false
                         })
         }
         setArr(numArr)
@@ -113,8 +122,8 @@ function Sorter() {
         <>
             <div className="sorting-section">
                 {arr.map((node,nodeIdx) => (
-                    <div key={nodeIdx} className={"node"} style={{height:`${node.height*3}px`, width: `${node.width}px`}}>
-
+                    <div key={nodeIdx} onClick={()=>handleClick(node)} className={"node"} style={{height:`${node.height*3}px`, width: `${node.width}px`}}>
+                        {node.showSize && <Typography variant="h5">Node Height : {node.height}</Typography>}
                     </div>
                 ))}
             </div>

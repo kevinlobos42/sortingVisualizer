@@ -38,6 +38,15 @@
 .node.moving {
   background: greenyellow;
 }
+.node:hover {
+  background: yellow;
+  cursor: pointer;
+}
+.node > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 @media only screen and (max-width: 700px) {
   .node {
     width: 1px;
